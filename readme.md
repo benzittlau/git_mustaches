@@ -122,3 +122,39 @@ end
 
 At this point we have our API hitting another API, that's pretty cool!
 
+## Building against the github webhook API using ngrok
+Now we want to try and wire up to some github callbacks
+
+Next we'll need to get ngrok setup
+http://zittlau.ca/develop-against-external-webhooks-locally-using-ngrok/
+
+After install we'll run it:
+/Applications/ngrok 4567
+
+We can test it using postman
+http://47a49730.ngrok.com/image_me/the world
+
+And take a look using the web interface
+http://localhost:4040/http/in
+
+Here we can take a look at, and resubmit, the request
+
+Now let's setup a basic sinatra endpoint and give it to github in our repo settings for issue comments
+
+Now if we do a test comment we'll see it show up in ngrok
+
+Now that we have an example in ngrok we can test our code without having to use github
+
+## Connecting it all together
+
+Let's connect all the pieces, so that if the comment is of the form "image me <string>" we'll inject an image
+with the url that our image_url method returns into the github issue
+
+First let's capture a request by creating a comment on the issue in github.  This will let ngrok capture it and
+give us a base to work with
+
+Hint: The markdown for embedding an image is
+``` gfm
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+```
+

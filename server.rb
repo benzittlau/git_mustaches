@@ -15,9 +15,24 @@ get '/comment_me/:phrase' do
   status comment_on_issue(params[:search])
 end
 
-def comment_on_issue(phrase)
+post '/github_webhook' do
+  json = JSON.parse(request.body.read)
+  comment = json["comment"]["body"]
+
+  if matches = /^image me (.*)$/i.match(comment)
+    phrase = matches[1]
+    image_url = get_image_url(phrase)
+
+    image_markdown = "![Image of #{phrase}](#{image_url})"
+    comment_on_issue(image_markdown)
+
+    image_markdown
+  end
+end
+
+def comment_on_issue(string)
   options = {
-    :body => { :body => 'From Sinatra' }.to_json,
+    :body => { :body => string}.to_json,
     :headers => {
       "Authorization" => "token #{ENV['GITHUB_OAUTH2_TOKEN']}",
       "User-Agent" => 'benzittlau'
