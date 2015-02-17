@@ -11,6 +11,11 @@ In building this quick project we're going to go through a few steps
 * Build against the github webhook API using ngrok
 * Build against the mustachify.me API, first in postman, then in sinatra
 
+# Disclaimer
+The purpose of this talk is *not* showing how to build a good API, and many shortcuts are
+taken in the sinatra API that is built to try and move quickly through integrating
+the other API's, and highlighting how to use Postman and NGROK to facilitate.
+
 ## Building an API endpoint in sinatra
 This is pretty quick and easy
 http://www.sinatrarb.com/
@@ -158,3 +163,19 @@ Hint: The markdown for embedding an image is
 ![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
 ```
 
+``` ruby
+post '/github_webhook' do
+  json = JSON.parse(request.body.read)
+  comment = json["comment"]["body"]
+
+  if matches = /^image me (.*)$/i.match(comment)
+    phrase = matches[1]
+    image_url = get_image_url(phrase)
+
+    image_markdown = "![Image of #{phrase}](#{image_url})"
+    comment_on_issue(image_markdown)
+
+    image_markdown
+  end
+end
+```
