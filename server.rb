@@ -50,11 +50,11 @@ def get_image_url(query)
       :v => 1.0,
       :imgtype => 'face',
       :as_filetype => 'jpeg',
-      :rsz => 1,
+      :rsz => 8,
       :q => query
     }
   }
   response = HTTParty.get('https://ajax.googleapis.com/ajax/services/search/images', options)
 
-  JSON.parse(response.body)["responseData"]["results"][0]["url"]
+  JSON.parse(response.body)["responseData"]["results"].sample["url"]
 end
